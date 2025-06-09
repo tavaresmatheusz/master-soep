@@ -28,7 +28,7 @@ export async function checkLogin(): Promise<boolean> {
       Authorization: `Bearer ${token}`,
     };
 
-    const response = await fetch(`${API_BASE_URL}/master/profile`, {
+    const response = await fetch(`${API_BASE_URL}/master/analytics`, {
       method: 'GET',
       headers,
       cache: 'no-store', // Para sempre buscar dados atualizados
