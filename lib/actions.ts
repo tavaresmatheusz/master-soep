@@ -2,23 +2,35 @@
 
 import { cookies } from 'next/headers';
 import { Analytics } from './types';
+import { authApi } from './api';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3500';
 
 async function getAuthHeaders() {
   const cookieStore = await cookies();
   const token = cookieStore.get('master_token')?.value;
-  
+
   return {
     'Content-Type': 'application/json',
     ...(token && { Authorization: `Bearer ${token}` }),
   };
 }
 
+export async function login(totpCode: string): Promise<{ access_token: string }> {
+  try {
+    const response = await authApi.login(totpCode);
+
+    return response;
+  } catch (error) {
+    console.error('Erro ao fazer login:', error);
+    throw new Error('Erro ao fazer login');
+  }
+}
+
 export async function getAnalytics(): Promise<Analytics> {
   try {
     const headers = await getAuthHeaders();
-    
+
     const response = await fetch(`${API_BASE_URL}/master/analytics`, {
       method: 'GET',
       headers,
@@ -43,7 +55,7 @@ export async function getAnalytics(): Promise<Analytics> {
 export async function getSummary(): Promise<any> {
   try {
     const headers = await getAuthHeaders();
-    
+
     const response = await fetch(`${API_BASE_URL}/master/stats/summary`, {
       method: 'GET',
       headers,
@@ -69,7 +81,7 @@ export async function getSummary(): Promise<any> {
 export async function getUsers(page = 1, limit = 20): Promise<any> {
   try {
     const headers = await getAuthHeaders();
-    
+
     const response = await fetch(`${API_BASE_URL}/master/users?page=${page}&limit=${limit}`, {
       method: 'GET',
       headers,
@@ -94,7 +106,7 @@ export async function getUsers(page = 1, limit = 20): Promise<any> {
 export async function updateUser(id: string, userData: any): Promise<any> {
   try {
     const headers = await getAuthHeaders();
-    
+
     const response = await fetch(`${API_BASE_URL}/master/users/${id}`, {
       method: 'PUT',
       headers,
@@ -119,7 +131,7 @@ export async function updateUser(id: string, userData: any): Promise<any> {
 export async function deleteUser(id: string): Promise<any> {
   try {
     const headers = await getAuthHeaders();
-    
+
     const response = await fetch(`${API_BASE_URL}/master/users/${id}`, {
       method: 'DELETE',
       headers,
@@ -144,7 +156,7 @@ export async function deleteUser(id: string): Promise<any> {
 export async function getProjects(page = 1, limit = 20): Promise<any> {
   try {
     const headers = await getAuthHeaders();
-    
+
     const response = await fetch(`${API_BASE_URL}/master/projects?page=${page}&limit=${limit}`, {
       method: 'GET',
       headers,
@@ -169,7 +181,7 @@ export async function getProjects(page = 1, limit = 20): Promise<any> {
 export async function updateProject(id: string, projectData: any): Promise<any> {
   try {
     const headers = await getAuthHeaders();
-    
+
     const response = await fetch(`${API_BASE_URL}/master/projects/${id}`, {
       method: 'PUT',
       headers,
@@ -194,7 +206,7 @@ export async function updateProject(id: string, projectData: any): Promise<any> 
 export async function deleteProject(id: string): Promise<any> {
   try {
     const headers = await getAuthHeaders();
-    
+
     const response = await fetch(`${API_BASE_URL}/master/projects/${id}`, {
       method: 'DELETE',
       headers,
@@ -219,7 +231,7 @@ export async function deleteProject(id: string): Promise<any> {
 export async function getPayments(page = 1, limit = 20): Promise<any> {
   try {
     const headers = await getAuthHeaders();
-    
+
     const response = await fetch(`${API_BASE_URL}/master/payments?page=${page}&limit=${limit}`, {
       method: 'GET',
       headers,
@@ -244,7 +256,7 @@ export async function getPayments(page = 1, limit = 20): Promise<any> {
 export async function getPlans(page = 1, limit = 20): Promise<any> {
   try {
     const headers = await getAuthHeaders();
-    
+
     const response = await fetch(`${API_BASE_URL}/master/plans?page=${page}&limit=${limit}`, {
       method: 'GET',
       headers,
@@ -269,7 +281,7 @@ export async function getPlans(page = 1, limit = 20): Promise<any> {
 export async function updatePlan(id: string, planData: any): Promise<any> {
   try {
     const headers = await getAuthHeaders();
-    
+
     const response = await fetch(`${API_BASE_URL}/master/plans/${id}`, {
       method: 'PUT',
       headers,
@@ -294,7 +306,7 @@ export async function updatePlan(id: string, planData: any): Promise<any> {
 export async function checkHealth(): Promise<any> {
   try {
     const headers = await getAuthHeaders();
-    
+
     const response = await fetch(`${API_BASE_URL}/master/health`, {
       method: 'GET',
       headers,

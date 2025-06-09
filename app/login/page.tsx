@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import { authApi } from '@/lib/api';
+import { login } from '@/lib/actions';
 
 export default function LoginPage() {
   const [totpCode, setTotpCode] = useState('');
@@ -17,7 +18,7 @@ export default function LoginPage() {
     setError('');
 
     try {
-      const response = await authApi.login(totpCode);
+      const response = await login(totpCode);
       Cookies.set('master_token', response.access_token, { expires: 1/12 }); // 2 horas
       router.push('/dashboard');
     } catch (err: any) {
@@ -37,11 +38,8 @@ export default function LoginPage() {
             </svg>
           </div>
           <h2 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-            Master Dashboard
+            SOEP
           </h2>
-          <p className="mt-3 text-lg text-gray-600">
-            Digite o código TOTP do seu autenticador
-          </p>
         </div>
         
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
@@ -99,20 +97,6 @@ export default function LoginPage() {
               </button>
             </div>
           </form>
-        </div>
-
-        <div className="text-center">
-          <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-            <div className="flex items-center justify-center mb-2">
-              <svg className="h-5 w-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-              </svg>
-              <span className="text-sm font-medium text-gray-600">Apps Suportados</span>
-            </div>
-            <p className="text-sm text-gray-500">
-              Google Authenticator, Authy, Microsoft Authenticator
-            </p>
-          </div>
         </div>
       </div>
     </div>
