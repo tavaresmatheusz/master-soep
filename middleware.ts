@@ -4,23 +4,14 @@ import { checkLogin } from './lib/actions'
 
 export default async function middleware(request: NextRequest) {
     const url = request.nextUrl.href
-
-    const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || null
-
     const response = NextResponse.next()
-    const check = await checkLogin();
 
-    if (!request.cookies.get('client-ip') && ip) {
-        response.cookies.set('client-ip', ip, {
-            httpOnly: false,
-            sameSite: 'lax',
-            path: '/',
-        })
+    if (url.includes('dashboard')) {
+        console.log("Checking dashboard access...");
+        const hasToken = await checkLogin()
+        console.log("Dashboard access check result:", hasToken);
+        return hasToken ? response : NextResponse.redirect(new URL('/login', request.url))
     }
-
-    if (!check && !url.includes("login"))
-        return NextResponse.redirect(new URL('/login', request.url))
-
 
     return response
 }
