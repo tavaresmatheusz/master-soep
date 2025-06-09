@@ -18,18 +18,9 @@ export default async function middleware(request: NextRequest) {
         })
     }
 
-    if (!check)
+    if (!check && !url.includes("login"))
         return NextResponse.redirect(new URL('/login', request.url))
 
-    // if (url.includes('login')) {
-    //     const hasToken = await checkLogin
-    //     return hasToken ? NextResponse.redirect(new URL('/projects', request.url)) : response
-    // }
-
-    // if (url.includes('dashboard')) {
-    //     const hasToken = await checkLogin()
-    //     return hasToken ? response : NextResponse.redirect(new URL('/login', request.url))
-    // }
 
     return response
 }
