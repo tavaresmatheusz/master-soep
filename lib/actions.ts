@@ -16,6 +16,38 @@ async function getAuthHeaders() {
   };
 }
 
+export async function checkLogin(): Promise<boolean> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get('master_token')?.value;
+  if (!token) {
+    return false;
+  }
+  try {
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    };
+
+    const response = await fetch(`${API_BASE_URL}/master/profile`, {
+      method: 'GET',
+      headers,
+      cache: 'no-store', // Para sempre buscar dados atualizados
+    });
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        return false; // Token inválido ou expirado
+      }
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return true; // Login válido
+  } catch (error) {
+    console.error('Erro ao verificar login:', error);
+    return false;
+  }
+}
+
 export async function login(totpCode: string): Promise<{ access_token: string }> {
   try {
     const response = await authApi.login(totpCode);
