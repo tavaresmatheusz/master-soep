@@ -8,7 +8,7 @@ export default async function middleware(request: NextRequest) {
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || null
 
     const response = NextResponse.next()
-    const check = checkLogin();
+    const check = await checkLogin();
 
     if (!request.cookies.get('client-ip') && ip) {
         response.cookies.set('client-ip', ip, {
