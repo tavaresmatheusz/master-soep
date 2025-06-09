@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Layout from '@/components/Layout';
-import { paymentsApi } from '@/lib/api';
+import { getPayments } from '@/lib/actions';
 import { Payment } from '@/lib/types';
 import { 
   Search, 
@@ -33,11 +33,11 @@ export default function PaymentsPage() {
   const loadPayments = async () => {
     try {
       setLoading(true);
-      const response = await paymentsApi.getPayments(currentPage, paymentsPerPage);
+      const response = await getPayments(currentPage, paymentsPerPage);
       setPayments(response.payments || []);
       setTotalPayments(response.total || 0);
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Erro ao carregar pagamentos');
+      setError(err.message || 'Erro ao carregar pagamentos');
     } finally {
       setLoading(false);
     }

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Layout from '@/components/Layout';
-import { projectsApi } from '@/lib/api';
+import { getProjects, updateProject, deleteProject } from '@/lib/actions';
 import { Project } from '@/lib/types';
 import { 
   Search, 
@@ -35,11 +35,11 @@ export default function ProjectsPage() {
   const loadProjects = async () => {
     try {
       setLoading(true);
-      const response = await projectsApi.getProjects(currentPage, projectsPerPage);
+      const response = await getProjects(currentPage, projectsPerPage);
       setProjects(response.projects || []);
       setTotalProjects(response.total || 0);
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Erro ao carregar projetos');
+      setError(err.message || 'Erro ao carregar projetos');
     } finally {
       setLoading(false);
     }
@@ -54,12 +54,12 @@ export default function ProjectsPage() {
     if (!editingProject) return;
 
     try {
-      await projectsApi.updateProject(editingProject.id, projectData);
+      await updateProject(editingProject.id, projectData);
       setShowEditModal(false);
       setEditingProject(null);
       loadProjects();
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Erro ao atualizar projeto');
+      setError(err.message || 'Erro ao atualizar projeto');
     }
   };
 
@@ -67,10 +67,10 @@ export default function ProjectsPage() {
     if (!confirm('Tem certeza que deseja deletar este projeto?')) return;
 
     try {
-      await projectsApi.deleteProject(projectId);
+      await deleteProject(projectId);
       loadProjects();
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Erro ao deletar projeto');
+      setError(err.message || 'Erro ao deletar projeto');
     }
   };
 

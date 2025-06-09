@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Layout from '@/components/Layout';
-import { usersApi } from '@/lib/api';
+import { getUsers, updateUser, deleteUser } from '@/lib/actions';
 import { User } from '@/lib/types';
 import { 
   Search, 
@@ -34,11 +34,11 @@ export default function UsersPage() {
   const loadUsers = async () => {
     try {
       setLoading(true);
-      const response = await usersApi.getUsers(currentPage, usersPerPage);
+      const response = await getUsers(currentPage, usersPerPage);
       setUsers(response.users || []);
       setTotalUsers(response.total || 0);
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Erro ao carregar usuários');
+      setError(err.message || 'Erro ao carregar usuários');
     } finally {
       setLoading(false);
     }
@@ -53,12 +53,12 @@ export default function UsersPage() {
     if (!editingUser) return;
 
     try {
-      await usersApi.updateUser(editingUser.id, userData);
+      await updateUser(editingUser.id, userData);
       setShowEditModal(false);
       setEditingUser(null);
       loadUsers();
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Erro ao atualizar usuário');
+      setError(err.message || 'Erro ao atualizar usuário');
     }
   };
 
@@ -66,10 +66,10 @@ export default function UsersPage() {
     if (!confirm('Tem certeza que deseja deletar este usuário?')) return;
 
     try {
-      await usersApi.deleteUser(userId);
+      await deleteUser(userId);
       loadUsers();
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Erro ao deletar usuário');
+      setError(err.message || 'Erro ao deletar usuário');
     }
   };
 

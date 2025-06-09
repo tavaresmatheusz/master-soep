@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Layout from '@/components/Layout';
-import { analyticsApi } from '@/lib/api';
+import { getAnalytics } from '@/lib/actions';
 import { Analytics } from '@/lib/types';
 import {
   BarChart,
@@ -60,10 +60,10 @@ export default function DashboardPage() {
   const loadAnalytics = async () => {
     try {
       setLoading(true);
-      const data = await analyticsApi.getAnalytics();
+      const data = await getAnalytics();
       setAnalytics(data);
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Erro ao carregar analytics');
+      setError(err.message || 'Erro ao carregar analytics');
     } finally {
       setLoading(false);
     }

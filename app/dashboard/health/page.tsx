@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Layout from '@/components/Layout';
-import { healthApi } from '@/lib/api';
+import { checkHealth } from '@/lib/actions';
 import { 
   Activity, 
   AlertCircle,
@@ -27,21 +27,21 @@ export default function HealthPage() {
   const [lastChecked, setLastChecked] = useState<Date>(new Date());
 
   useEffect(() => {
-    checkHealth();
+    checkHealthStatus();
     // Auto-refresh a cada 30 segundos
-    const interval = setInterval(checkHealth, 30000);
+    const interval = setInterval(checkHealthStatus, 30000);
     return () => clearInterval(interval);
   }, []);
 
-  const checkHealth = async () => {
+  const checkHealthStatus = async () => {
     try {
       setLoading(true);
-      const data = await healthApi.checkHealth();
+      const data = await checkHealth();
       setHealth(data);
       setLastChecked(new Date());
       setError('');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Erro ao verificar saúde do sistema');
+      setError(err.message || 'Erro ao verificar saúde do sistema');
     } finally {
       setLoading(false);
     }
@@ -145,7 +145,7 @@ export default function HealthPage() {
             <p className="mt-2 text-gray-600">Monitoramento em tempo real da plataforma</p>
           </div>
           <button
-            onClick={checkHealth}
+            onClick={checkHealthStatus}
             className="btn-primary flex items-center"
             disabled={loading}
           >

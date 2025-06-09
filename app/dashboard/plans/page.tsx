@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Layout from '@/components/Layout';
-import { plansApi } from '@/lib/api';
+import { getPlans, updatePlan } from '@/lib/actions';
 import { Plan } from '@/lib/types';
 import { 
   Search, 
@@ -35,11 +35,11 @@ export default function PlansPage() {
   const loadPlans = async () => {
     try {
       setLoading(true);
-      const response = await plansApi.getPlans(currentPage, plansPerPage);
+      const response = await getPlans(currentPage, plansPerPage);
       setPlans(response.plans || []);
       setTotalPlans(response.total || 0);
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Erro ao carregar planos');
+      setError(err.message || 'Erro ao carregar planos');
     } finally {
       setLoading(false);
     }
@@ -54,12 +54,12 @@ export default function PlansPage() {
     if (!editingPlan) return;
 
     try {
-      await plansApi.updatePlan(editingPlan.id, planData);
+      await updatePlan(editingPlan.id, planData);
       setShowEditModal(false);
       setEditingPlan(null);
       loadPlans();
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Erro ao atualizar plano');
+      setError(err.message || 'Erro ao atualizar plano');
     }
   };
 
