@@ -188,7 +188,7 @@ export default function PlansPage() {
                       </span>
                     </td>
                     <td>
-                      <span className="text-sm text-gray-900">{plan.projectSizeLimit} GB</span>
+                      <span className="text-sm text-gray-900">{plan.projectSizeLimit} Usuarios</span>
                     </td>
                     <td>
                       <div className="flex items-center text-sm text-gray-900">

@@ -26,7 +26,6 @@ const navigation = [
   { name: 'Projetos', href: '/dashboard/projects', icon: FolderOpen },
   { name: 'Planos', href: '/dashboard/plans', icon: CreditCard },
   { name: 'Pagamentos', href: '/dashboard/payments', icon: DollarSign },
-  { name: 'Saúde', href: '/dashboard/health', icon: Activity },
 ];
 
 export default function Layout({ children }: LayoutProps) {

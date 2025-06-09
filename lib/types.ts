@@ -61,6 +61,7 @@ export interface Payment {
     name: string;
     email: string;
   };
+  profileName?: string;
 }
 
 export interface Analytics {
